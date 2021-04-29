@@ -112,8 +112,17 @@ menu_draw:
   call print_str
   pop es
 
-  jmp $
-  jmp .menu_help
+  mov dx, 0x0200
+  call goto_xy
+  mov si, TINYBOOT_HELP
+  call print_str
+
+.help_read_key:
+  xor ax, ax
+  int 0x16
+  cmp ah, 0x3D
+  je menu_draw
+  jmp .help_read_key
 .menu_up:
   cmp byte [menu_entry_pos], 0x00
   je .read_key

@@ -19,8 +19,17 @@ tinyboot_stage_2:
   jmp $
 
 .load_config:
+  xor ax, ax
+  mov es, ax
   mov si, [TINYBOOT_CONFIG_PATH]
   mov di, TINYBOOT_CONFIG
+  mov bx, [TINYBOOT_READ]
+  call bx
+
+  xor ax, ax
+  mov es, ax
+  mov si, [TINYBOOT_HELP_PATH]
+  mov di, TINYBOOT_HELP
   mov bx, [TINYBOOT_READ]
   call bx
 

@@ -8,8 +8,9 @@
 %define TINYBOOT_CONFIG_PATH 0x7014 ; Pointer to config file path
 %define TINYBOOT_HELP_PATH   0x7016 ; Pointer to help file path
 %define TINYBOOT_LBA         0x7018 ; LBA address of partition
-%define TINYBOOT_BUFFER      0x0600 ; FS temp. buffer
+%define TINYBOOT_BUFFER      0x5000 ; FS temp. buffer
 %define TINYBOOT_CONFIG      0x1000 ; Config file buffer
+%define TINYBOOT_HELP        0x3000 ; Help file buffer
 
 tinyboot_bpb:
   jmp tinyboot_stage_1
