@@ -5,13 +5,13 @@ tinyboot_stage_2:
   call print_str
 
   call tinyfs_detect
-  je short .load_config
+  je .load_config
 
   call echfs_detect
-  je short .load_config
+  je .load_config
 
   call fat32_detect
-  je short .load_config
+  je .load_config
 
   mov si, detect_fail_str
   call print_str

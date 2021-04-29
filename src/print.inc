@@ -26,19 +26,19 @@ print_hex:
   add dx, 0x3030
 .test_al:
   cmp al, '9'
-  jle short .test_ah
+  jle .test_ah
   add al, 0x07
 .test_ah:
   cmp ah, '9'
-  jle short .test_dl
+  jle .test_dl
   add ah, 0x07
 .test_dl:
   cmp dl, '9'
-  jle short .test_dh
+  jle .test_dh
   add dl, 0x07
 .test_dh:
   cmp dh, '9'
-  jle short .print_all
+  jle .print_all
   add dh, 0x07
 .print_all:
   push ax
@@ -59,9 +59,9 @@ print_str:
 .str_loop:
   lodsb
   test al, al
-  jz short .str_end
+  jz .str_end
   int 0x10
-  jmp short .str_loop
+  jmp .str_loop
 .str_end:
   pop ax
   ret

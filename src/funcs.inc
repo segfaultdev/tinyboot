@@ -2,9 +2,9 @@ func_str_cmp:
   pusha
 .str_loop:
   cmp byte [si], 0x00
-  je short .str_end
+  je .str_end
   cmpsb
-  je short .str_loop
+  je .str_loop
   dec si
   dec di
 .str_end:
@@ -20,4 +20,14 @@ func_mem_cmp:
   sub si, di
   cmp si, cx
   popa
+  ret
+
+func_next_line:
+.char_loop:
+  cmp byte [si], 0x20
+  jl .char_end
+  inc si
+  jmp .char_loop
+.char_end:
+  inc si
   ret

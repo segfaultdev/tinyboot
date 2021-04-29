@@ -22,7 +22,7 @@ drive_read:
   add ebx, [TINYBOOT_LBA]
 .load_loop:
   test cx, cx
-  jz short .load_end
+  jz .load_end
   pushad
   mov si, TINYBOOT_DAP
   mov byte  [si + 0x00], 0x10
@@ -41,7 +41,7 @@ drive_read:
   mov es, ax
   inc ebx
   dec cx
-  jmp short .load_loop
+  jmp .load_loop
 .error_end:
   popad
   ret

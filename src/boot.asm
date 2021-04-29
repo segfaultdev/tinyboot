@@ -32,14 +32,14 @@ tinyboot_stage_1:
   sti
 .check_drv:
   cmp dl, 0x80
-  jl short drv_error_1
+  jl drv_error_1
 .check_lba:
   mov ah, 0x41
   mov bx, 0x55AA
   int 0x13
-  jc short ext_error_1
+  jc ext_error_1
   cmp bx, 0xAA55
-  jne short ext_error_1
+  jne ext_error_1
 .setup_dap:
   mov si, TINYBOOT_DAP
   mov byte  [si + 0x00], 0x10
@@ -52,7 +52,7 @@ tinyboot_stage_1:
 .check_mbr_atr:
   mov eax,   [di + 0x08]		; lba
   test dword [di + 0x00], 0x80		; attr check 8th bit flag
-  jnz short .load_stage_2		; if match then load stage 2
+  jnz .load_stage_2		; if match then load stage 2
   add di, 16				; go to next pair
   loop .check_mbr_atr
 
@@ -64,17 +64,17 @@ tinyboot_stage_1:
   mov dword [si + 0x08], eax
   mov ah, 0x42
   int 0x13
-  jc short ext_error_1
+  jc ext_error_1
   jmp 0x0000:0x7E00
 
 drv_error_1:
   mov si, drv_error_1_str
-  jmp short error_1
+  jmp error_1
 ext_error_1:
   mov si, ext_error_1_str
 
 ; implicit fallback ;)
-; jmp short error_1
+; jmp error_1
 
 error_1:
   mov ah, 0x0E
@@ -82,9 +82,9 @@ error_1:
 .str_loop:
   lodsb
   test al, al
-  jz short .str_end
+  jz .str_end
   int 0x10
-  jmp short .str_loop
+  jmp .str_loop
 .str_end:
   jmp $
 

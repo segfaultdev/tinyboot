@@ -4,7 +4,7 @@
 
 tinyfs_detect:
   cmp word [TINYFS_SIGNATURE], 0xF007
-  jne short .skip_set
+  jne .skip_set
   mov word [TINYBOOT_READ], tinyfs_read
 .skip_set:
   ret
@@ -23,11 +23,11 @@ tinyfs_read:
   call drive_read
   pop es
   cmp byte [es:di], 0x80
-  jne short .header_next
+  jne .header_next
   add di, 0x0002
-  jc short .tinyfs_error
+  jc .tinyfs_error
   call func_str_cmp
-  je short .header_end
+  je .header_end
 .header_next:
   sub di, 0x0002
   add ebx, [es:di + 0x01F0]
@@ -45,7 +45,7 @@ tinyfs_read:
   push di
   mov edx, [fs:di + 0x01F8]
   test edx, edx
-  jz short .block_end
+  jz .block_end
   mov ebx, edx
   inc cx
   call drive_read
