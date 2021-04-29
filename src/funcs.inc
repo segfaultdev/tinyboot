@@ -2,9 +2,9 @@ func_str_cmp:
   pusha
 .str_loop:
   cmp byte [si], 0x00
-  je .str_end
+  je short .str_end
   cmpsb
-  je .str_loop
+  je short .str_loop
   dec si
   dec di
 .str_end:

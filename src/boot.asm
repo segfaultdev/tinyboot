@@ -42,16 +42,16 @@ tinyboot_stage_1:
   mov byte  [si + 0x05], 0x7E
   mov eax, [mbr_lba_1]
   test byte [mbr_atr_1], 0x80
-  jnz .load_stage_2
+  jnz short .load_stage_2
   mov eax, [mbr_lba_2]
   test byte [mbr_atr_2], 0x80
-  jnz .load_stage_2
+  jnz short .load_stage_2
   mov eax, [mbr_lba_3]
   test byte [mbr_atr_3], 0x80
-  jnz .load_stage_2
+  jnz short .load_stage_2
   mov eax, [mbr_lba_4]
   test byte [mbr_atr_4], 0x80
-  jnz .load_stage_2
+  jnz short .load_stage_2
   xor eax, eax
 .load_stage_2:
   mov [TINYBOOT_DRIVE], dl
@@ -65,21 +65,20 @@ tinyboot_stage_1:
 
 drv_error_1:
   mov si, drv_error_1_str
-  jmp error_1
+  jmp short error_1
 ext_error_1:
   mov si, ext_error_1_str
-  jmp error_1
+; jmp short error_1
 
 error_1:
-.str_loop:
-  mov al, [si]
-  test al, al
-  jz .str_end
   mov ah, 0x0E
   xor bh, bh
+.str_loop:
+  lodsb
+  test al, al
+  jz short .str_end
   int 0x10
-  inc si
-  jmp .str_loop
+  jmp short .str_loop
 .str_end:
   jmp $
 

@@ -17,19 +17,19 @@ print_hex:
   add dx, 0x3030
 .test_al:
   cmp al, '9'
-  jle .test_ah
+  jle short .test_ah
   add al, 0x07
 .test_ah:
   cmp ah, '9'
-  jle .test_dl
+  jle short .test_dl
   add ah, 0x07
 .test_dl:
   cmp dl, '9'
-  jle .test_dh
+  jle short .test_dh
   add dl, 0x07
 .test_dh:
   cmp dh, '9'
-  jle .print_all
+  jle short .print_all
   add dh, 0x07
 .print_all:
   push ax
@@ -46,13 +46,13 @@ print_hex:
 
 print_str:
   push ax
+  mov ah, 0x0E
 .str_loop:
-  mov al, [si]
+  lodsb
   test al, al
-  jz .str_end
-  call print_chr
-  inc si
-  jmp .str_loop
+  jz short .str_end
+  int 0x10
+  jmp short .str_loop
 .str_end:
   pop ax
   ret
