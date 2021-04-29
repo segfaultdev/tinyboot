@@ -119,4 +119,4 @@ mbr_lba_4:
 mbr_signature:
   dw 0xAA55
 
-%include "stage_2.inc"
+%include "src/stage_2.inc"

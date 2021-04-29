@@ -29,15 +29,15 @@ tinyboot_stage_2:
   ; call menu_draw
   jmp $
 
-%include "print.inc"
-%include "funcs.inc"
-%include "drive.inc"
+%include "src/print.inc"
+%include "src/funcs.inc"
+%include "src/drive.inc"
 
-%include "fs/tinyfs.inc"
-%include "fs/echfs.inc"
-%include "fs/fat32.inc"
+%include "src/fs/tinyfs.inc"
+%include "src/fs/echfs.inc"
+%include "src/fs/fat32.inc"
 
-%include "menu.inc"
+%include "src/menu.inc"
 
 test_filename_str:
   db "TEST    TXT", 0x00
