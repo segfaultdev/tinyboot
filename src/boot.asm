@@ -19,6 +19,7 @@ tinyboot_bpb:
 times 0x0080 - ($ - $$) db 0xCC
 
 tinyboot_stage_1:
+  cli					; interrupts should be disabled when setting stack
   xor ax, ax
   mov ds, ax
   mov es, ax
@@ -31,31 +32,30 @@ tinyboot_stage_1:
   sti
 .check_drv:
   cmp dl, 0x80
-  jl drv_error_1
+  jl short drv_error_1
 .check_lba:
   mov ah, 0x41
   mov bx, 0x55AA
   int 0x13
-  jc ext_error_1
+  jc short ext_error_1
   cmp bx, 0xAA55
-  jne ext_error_1
+  jne short ext_error_1
 .setup_dap:
   mov si, TINYBOOT_DAP
   mov byte  [si + 0x00], 0x10
   mov byte  [si + 0x02], 0x03
   mov byte  [si + 0x05], 0x7E
-  mov eax, [mbr_lba_1]
-  test byte [mbr_atr_1], 0x80
-  jnz .load_stage_2
-  mov eax, [mbr_lba_2]
-  test byte [mbr_atr_2], 0x80
-  jnz .load_stage_2
-  mov eax, [mbr_lba_3]
-  test byte [mbr_atr_3], 0x80
-  jnz .load_stage_2
-  mov eax, [mbr_lba_4]
-  test byte [mbr_atr_4], 0x80
-  jnz .load_stage_2
+
+  ; check all 4 mbr pair of qwords
+  mov di, mbr_table
+  mov cx, 4				; we have 4 pairs
+.check_mbr_atr:
+  mov eax,   [di + 0x08]		; lba
+  test dword [di + 0x00], 0x80		; attr check 8th bit flag
+  jnz short .load_stage_2		; if match then load stage 2
+  add di, 16				; go to next pair
+  loop .check_mbr_atr
+
   xor eax, eax
 .load_stage_2:
   mov [TINYBOOT_DRIVE], dl
@@ -64,29 +64,29 @@ tinyboot_stage_1:
   mov dword [si + 0x08], eax
   mov ah, 0x42
   int 0x13
-  jc ext_error_1
+  jc short ext_error_1
   jmp 0x0000:0x7E00
 
 drv_error_1:
   mov si, drv_error_1_str
-  jmp error_1
+  jmp short error_1
 ext_error_1:
   mov si, ext_error_1_str
-  jmp error_1
+
+; implicit fallback ;)
+; jmp short error_1
 
 error_1:
-.str_loop:
-  mov al, [si]
-  test al, al
-  jz .str_end
   mov ah, 0x0E
   xor bh, bh
+.str_loop:
+  lodsb
+  test al, al
+  jz short .str_end
   int 0x10
-  inc si
-  jmp .str_loop
+  jmp short .str_loop
 .str_end:
   jmp $
-
 
 drv_error_1_str:
   db "tinyboot: Invalid drive", 0x00
@@ -100,25 +100,18 @@ mbr_uuid:
 mbr_reserved:
   dw 0x0000
 
-mbr_atr_1:
-  dq 0x0000000000000000
-mbr_lba_1:
-  dq 0x0000000000000000
+mbr_table:
+  dq 0 ; atr
+  dq 0 ; lba
 
-mbr_atr_2:
-  dq 0x0000000000000000
-mbr_lba_2:
-  dq 0x0000000000000000
+  dq 0
+  dq 0
 
-mbr_atr_3:
-  dq 0x0000000000000000
-mbr_lba_3:
-  dq 0x0000000000000000
+  dq 0
+  dq 0
 
-mbr_atr_4:
-  dq 0x0000000000000000
-mbr_lba_4:
-  dq 0x0000000000000000
+  dq 0
+  dq 0
 
 mbr_signature:
   dw 0xAA55
