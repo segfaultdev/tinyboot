@@ -1,14 +1,7 @@
-AS=nasm
-ASFLAGS=-fbin
+AS = nasm
+AS_FLAGS = -fbin -O3
 
-INC_ASM=src/drive.inc		\
-	src/funcs.inc		\
-	src/menu.inc		\
-	src/print.inc		\
-	src/stage_2.inc		\
-	src/fs/echfs.inc	\
-	src/fs/fat32.inc	\
-	src/fs/tinyfs.inc
+AS_INCLUDE = $(shell find . -type f -name "*.inc")
 
 build: dirent test/fat32.img
 	@printf '\e[1m\e[36m[%s]\e[0m | Done!\n' TINYBOOT
@@ -29,6 +22,6 @@ test/fat32.img: bin/tinyboot.bin
 dirent:
 	@mkdir -p bin test mnt
 
-bin/tinyboot.bin: src/boot.asm $(INC_ASM)
+bin/tinyboot.bin: src/boot.asm $(AS_INCLUDE)
 	@printf '\e[1m\e[36m[%s]\e[0m | %s -> %s\n' AS $< $@
-	$(AS) $(ASFLAGS) $< -o $@
+	$(AS) $(AS_FLAGS) $< -o $@
