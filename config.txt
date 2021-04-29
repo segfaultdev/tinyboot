@@ -1,0 +1,8 @@
+# Example config file for tinyboot, by segfaultdev
+# If it wasn't obvious, this line is a comment! (:
+
+help="boot/help.txt"
+
+[MandelbrotOS]
+path="boot/mandelbrotos.elf"
+protocol="stivale2"
