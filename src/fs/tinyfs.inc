@@ -60,4 +60,4 @@ tinyfs_read:
   jmp $
 
 tinyfs_error_str:
-  db "tinyboot: tinyfs error", 0x0A, 0x0D, 0x00
+  db "tinyboot: tinyfs error", 0x0A, 0x00

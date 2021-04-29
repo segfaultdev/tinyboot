@@ -1,12 +1,15 @@
 [org 0x7C00]
 [bits 16]
 
-%define TINYBOOT_STACK  0x7000 ; Stack
-%define TINYBOOT_DAP    0x7000 ; Extended INT 0x13 DAP
-%define TINYBOOT_DRIVE  0x7010 ; Current INT 0x13 drive
-%define TINYBOOT_READ   0x7012 ; Pointer to read function
-%define TINYBOOT_LBA    0x7014 ; LBA address of partition
-%define TINYBOOT_BUFFER 0x0600 ; FS temp. buffer
+%define TINYBOOT_STACK       0x7000 ; Stack
+%define TINYBOOT_DAP         0x7000 ; Extended INT 0x13 DAP
+%define TINYBOOT_DRIVE       0x7010 ; Current INT 0x13 drive
+%define TINYBOOT_READ        0x7012 ; Pointer to read function
+%define TINYBOOT_CONFIG_PATH 0x7014 ; Pointer to config file path
+%define TINYBOOT_HELP_PATH   0x7016 ; Pointer to help file path
+%define TINYBOOT_LBA         0x7018 ; LBA address of partition
+%define TINYBOOT_BUFFER      0x0600 ; FS temp. buffer
+%define TINYBOOT_CONFIG      0x1000 ; Config file buffer
 
 tinyboot_bpb:
   jmp tinyboot_stage_1
@@ -119,4 +122,4 @@ mbr_lba_4:
 mbr_signature:
   dw 0xAA55
 
-%include "stage_2.inc"
+%include "src/stage_2.inc"

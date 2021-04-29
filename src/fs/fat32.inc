@@ -14,6 +14,8 @@ fat32_detect:
 .test_end:
   jne .skip_set
   mov word [TINYBOOT_READ], fat32_read
+  mov word [TINYBOOT_CONFIG_PATH], fat32_config_str
+  mov word [TINYBOOT_HELP_PATH], fat32_help_str
 .skip_set:
   ret
 
@@ -130,5 +132,10 @@ fat32_error:
   call print_str
   jmp $
 
+fat32_config_str:
+  db "CONFIG  TXT", 0x00
+fat32_help_str:
+  db "HELP    TXT", 0x00
+
 fat32_error_str:
-  db "tinyboot: FAT32 error", 0x0A, 0x0D, 0x00
+  db "tinyboot: FAT32 error", 0x0A, 0x00

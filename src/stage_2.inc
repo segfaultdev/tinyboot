@@ -19,32 +19,27 @@ tinyboot_stage_2:
   jmp $
 
 .load_config:
-  mov si, test_filename_str
-  mov di, 0x1000
-  call fat32_read
+  mov si, [TINYBOOT_CONFIG_PATH]
+  mov di, TINYBOOT_CONFIG
+  mov bx, [TINYBOOT_READ]
+  call bx
 
-  mov si, 0x1000
-  call print_str
-
-  ; call menu_draw
+  call menu_draw
   jmp $
 
-%include "print.inc"
-%include "funcs.inc"
-%include "drive.inc"
+%include "src/print.inc"
+%include "src/funcs.inc"
+%include "src/drive.inc"
 
-%include "fs/tinyfs.inc"
-%include "fs/echfs.inc"
-%include "fs/fat32.inc"
+%include "src/fs/tinyfs.inc"
+%include "src/fs/echfs.inc"
+%include "src/fs/fat32.inc"
 
-%include "menu.inc"
-
-test_filename_str:
-  db "TEST    TXT", 0x00
+%include "src/menu.inc"
 
 detect_str:
-  db "tinyboot: Detecting filesystems", 0x0A, 0x0D, 0x00
+  db "tinyboot: Detecting filesystems", 0x0A, 0x00
 detect_fail_str:
-  db "tinyboot: No filesystem found!", 0x0A, 0x0D, 0x00
+  db "tinyboot: No filesystem found!", 0x0A, 0x00
 
 times 0x0800 - ($ - $$) db 0xCC

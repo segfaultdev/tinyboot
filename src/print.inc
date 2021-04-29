@@ -1,10 +1,19 @@
 print_chr:
   pusha
+  cmp al, 0x0A
+  je .newline
+.print:
   mov ah, 0x0E
   xor bh, bh
   int 0x10
   popa
   ret
+.newline:
+  mov ax, 0x0E0A
+  xor bh, bh
+  int 0x10
+  mov al, 0x0D
+  jmp .print
 
 print_hex:
   pusha

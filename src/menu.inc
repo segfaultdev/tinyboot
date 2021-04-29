@@ -86,6 +86,33 @@ menu_draw:
   int 0x15
   jmp $
 .menu_help:
+  push es
+  mov ax, 0xB800
+  mov es, ax
+  mov ah, 0x70
+  mov cx, 0x0050
+  xor di, di
+  rep stosw
+  mov cl, 0x50
+  mov di, 0x0F00
+  rep stosw
+  mov di, 0x00A0
+  mov ah, 0x1F
+  mov cx, 0x0730
+  rep stosw
+  pop es
+
+  mov dx, 0x0001
+  call goto_xy
+  mov si, menu_help_top_str
+  call print_str
+  mov dx, 0x1801
+  call goto_xy
+  mov si, menu_help_btm_str
+  call print_str
+  pop es
+
+  jmp $
   jmp .menu_help
 .menu_up:
   cmp byte [menu_entry_pos], 0x00
@@ -110,6 +137,10 @@ menu_entry_pos:
   db 0x00
 
 menu_top_str:
-  db "tinyboot", 0x00
+  db "tinyboot - Select an entry", 0x00
 menu_btm_str:
   db "ENTER=Boot  ", 0x18, "/", 0x19, "=Move  F1=Help  F3=Quit", 0x00
+menu_help_top_str:
+  db "tinyboot - Help", 0x00
+menu_help_btm_str:
+  db "F3=Back", 0x00
